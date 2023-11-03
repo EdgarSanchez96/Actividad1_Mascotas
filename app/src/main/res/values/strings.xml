@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Actividad1_Mascotas</string>
+    <string name="titleRecyclerView">Listado Mascotas Adopción</string>
 </resources>
