@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="whiteText">#FFFFFFFF</color>
+    <color name="itemCardViewColor">#00324C</color>
+    <color name="mainBackground">#202732</color>
 </resources>
