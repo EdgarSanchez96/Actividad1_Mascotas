@@ -1,6 +1,7 @@
 package com.example.actividad1_mascotas
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -89,6 +90,10 @@ class ListPetsActivity : AppCompatActivity() {
                     val jsonObject = jsonArray.getJSONObject(i)
                     val dateFormat = "dd/MM/yyyy"
                     val date = stringToDate(jsonObject.getString("adoption_date"), dateFormat)
+                    val imageName = jsonObject.getString("image")+".png"
+                    val petImagePath = File(filesDir, imageName)
+                    val imageBitmap = BitmapFactory.decodeFile(petImagePath.absolutePath)
+
                     if (date != null) {
                         val pet = Pet(
                             id = jsonObject.getInt("id"),
@@ -101,11 +106,7 @@ class ListPetsActivity : AppCompatActivity() {
                             observation = jsonObject.getString("observation"),
                             refuge_status = TypeRefugeStatus.valueOf(jsonObject.getString("refuge_status")),
                             adoption_status = jsonObject.getBoolean("adoption_status"),
-                            image = resources.getIdentifier(
-                                jsonObject.getString("image"),
-                                "drawable",
-                                packageName
-                            ),
+                            image = imageBitmap,
                             publication_status = jsonObject.getBoolean("publication_status")
                         )
                         pets.add(pet)

@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.icu.util.Calendar
 import android.net.Uri
@@ -219,6 +220,11 @@ class RegisterPetActivity : AppCompatActivity() {
                             val jsonObject = jsonArray.getJSONObject(i)
                             val date_pet =
                                 stringToDate(jsonObject.getString("adoption_date"), dateFormat)
+                            val imageName = jsonObject.getString("image") // Nombre del archivo de imagen en el almacenamiento interno
+
+                            // Recupera el recurso de imagen desde el almacenamiento interno
+                            val petImagePath = File(filesDir, imageName)
+                            val imageBitmap = BitmapFactory.decodeFile(petImagePath.absolutePath)
                             if (date_pet != null) {
                                 val pet = Pet(
                                     id = jsonObject.getInt("id"),
@@ -235,11 +241,7 @@ class RegisterPetActivity : AppCompatActivity() {
                                     observation = jsonObject.getString("observation"),
                                     refuge_status = TypeRefugeStatus.valueOf(jsonObject.getString("refuge_status")),
                                     adoption_status = jsonObject.getBoolean("adoption_status"),
-                                    image = resources.getIdentifier(
-                                        jsonObject.getString("image"),
-                                        "drawable",
-                                        packageName
-                                    ),
+                                    image = imageBitmap,
                                     publication_status = jsonObject.getBoolean("publication_status")
                                 )
                                 petList.add(pet)
@@ -249,6 +251,9 @@ class RegisterPetActivity : AppCompatActivity() {
 
                         val nextId = petList.size + 1
 
+                        val imageName = "bulldog"
+                        val petImagePath = File(filesDir, imageName)
+                        val imageBitmap = BitmapFactory.decodeFile(petImagePath.absolutePath)
                         val newPet = Pet(
                             nextId,
                             TypeSpecies.valueOf(species),
@@ -260,7 +265,7 @@ class RegisterPetActivity : AppCompatActivity() {
                             observations,
                             TypeRefugeStatus.valueOf(shelterState),
                             isAdoptionStatus,
-                            R.drawable.bulldog, // cambiar por imagen
+                            imageBitmap,
                             isPublicationStatus
                         )
                         // Agregar la nueva mascota a la lista
@@ -288,28 +293,21 @@ class RegisterPetActivity : AppCompatActivity() {
                             jsonObject.put(
                                 "image",
                                 pet.image
-                            ) // Asegúrate de tener el nombre correcto de la imagen
+                            )
                             jsonObject.put("publication_status", pet.publication_status)
                             newJsonArray.put(jsonObject)
                         }
 
-                        // Obtén el almacenamiento interno de la aplicación
                         val file = File(filesDir, "pets.json")
-
-                        // Escribe el JSON en el archivo
                         val newJsonString = newJsonArray.toString()
                         println(newJsonString)
                         file.writeText(newJsonString)
 
-                        // Muestra un mensaje de éxito o realiza otras acciones necesarias
                         Toast.makeText(this, "Mascota registrada exitosamente.", Toast.LENGTH_SHORT)
                             .show()
 
-                        // Redirige a la actividad ListPetsActivity
                         val intent = Intent(this, ListPetsActivity::class.java)
                         startActivity(intent)
-
-                        // Cierra la actividad actual
                         finish()
                     }
 

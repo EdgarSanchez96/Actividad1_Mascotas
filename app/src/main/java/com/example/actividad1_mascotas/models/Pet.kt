@@ -1,5 +1,6 @@
 package com.example.actividad1_mascotas.models
 
+import android.graphics.Bitmap
 import java.util.Date
 
 //Se define cada uno de los atributos del objeto Pet(Mascota)
@@ -30,6 +31,6 @@ data class Pet(
     val observation: String,
     val refuge_status: TypeRefugeStatus,
     val adoption_status: Boolean,
-    val image: Int,
+    val image: Bitmap,
     val publication_status: Boolean,
 )
