@@ -19,9 +19,9 @@ class PetViewHolder(view: View): RecyclerView.ViewHolder(view) {
     //Función que permite renderizar cada uno de los valores en sus respectivos componentes, de acuerdo al objeto recibido
     fun render(pet: Pet){
         txtPetName.text = pet.name
-        txtPetSpecies.text = " - " + pet.species
+        txtPetSpecies.text = " - " + pet.species.name
         txtPetBreed.text = pet.breed
-        txtPetSex.text = pet.sex
+        txtPetSex.text = pet.sex.name
         ivPetImage.setImageResource(pet.image)
     }
 }

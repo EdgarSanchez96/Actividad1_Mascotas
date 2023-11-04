@@ -4,4 +4,6 @@
     <color name="whiteText">#FFFFFFFF</color>
     <color name="itemCardViewColor">#00324C</color>
     <color name="mainBackground">#202732</color>
+    <color name="primaryButtonColor">#05a197</color>
+    <color name="secondaryButtonColor">#3c3c3c</color>
 </resources>

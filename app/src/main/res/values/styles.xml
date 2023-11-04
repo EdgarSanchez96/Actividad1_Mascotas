@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Estilo personalizado para los EditText -->
+    <style name="CustomEditText">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:hint">Ingrese el nombre de la mascota</item>
+        <item name="android:lines">1</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:background">@drawable/edit_text_background</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <!-- Agrega otros atributos según tus necesidades -->
+    </style>
+
+    <!-- Estilo personalizado para los Spinner -->
+    <style name="CustomSpinnerStyle" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@drawable/spinner_background</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <!-- Otros atributos de estilo que desees -->
+    </style>
+    <style name="PrimaryButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@color/primaryButtonColor</item>
+    </style>
+
+    <style name="CustomButtonStyle" parent="Widget.AppCompat.Button">
+        <!-- Define los atributos de estilo de tu botón -->
+        <item name="android:background">@color/primaryButtonColor</item>
+        <item name="android:textColor">@color/secondaryButtonColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+
+
+</resources>
