@@ -8,18 +8,22 @@ import android.icu.util.Calendar
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
+import com.example.actividad1_mascotas.models.Pet
 import com.example.actividad1_mascotas.models.TypeClassification
 import com.example.actividad1_mascotas.models.TypeRefugeStatus
 import com.example.actividad1_mascotas.models.TypeSex
 import com.example.actividad1_mascotas.models.TypeSpecies
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -60,10 +64,23 @@ class RegisterPetActivity : AppCompatActivity() {
         val spinnerClassification = findViewById<Spinner>(R.id.spinnerClassification)
         val spinnerShelterState = findViewById<Spinner>(R.id.spinnerShelterState)
 
-        val speciesAdapter = ArrayAdapter<TypeSpecies>(this, android.R.layout.simple_spinner_item, TypeSpecies.values())
-        val sexAdapter = ArrayAdapter<TypeSex>(this, android.R.layout.simple_spinner_item, TypeSex.values())
-        val classificationAdapter = ArrayAdapter<TypeClassification>(this, android.R.layout.simple_spinner_item, TypeClassification.values())
-        val refugeStatusAdapter = ArrayAdapter<TypeRefugeStatus>(this, android.R.layout.simple_spinner_item, TypeRefugeStatus.values())
+        val speciesAdapter = ArrayAdapter<TypeSpecies>(
+            this,
+            android.R.layout.simple_spinner_item,
+            TypeSpecies.values()
+        )
+        val sexAdapter =
+            ArrayAdapter<TypeSex>(this, android.R.layout.simple_spinner_item, TypeSex.values())
+        val classificationAdapter = ArrayAdapter<TypeClassification>(
+            this,
+            android.R.layout.simple_spinner_item,
+            TypeClassification.values()
+        )
+        val refugeStatusAdapter = ArrayAdapter<TypeRefugeStatus>(
+            this,
+            android.R.layout.simple_spinner_item,
+            TypeRefugeStatus.values()
+        )
 
         speciesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sexAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -83,7 +100,8 @@ class RegisterPetActivity : AppCompatActivity() {
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             val datePickerDialog = DatePickerDialog(this, { _, year, month, dayOfMonth ->
-                val selectedDate = "$dayOfMonth/${month + 1}/$year" // Formatear la fecha como desees
+                val selectedDate =
+                    "$dayOfMonth/${month + 1}/$year" // Formatear la fecha como desees
 
                 val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 val selectedDateDate = sdf.parse(selectedDate)
@@ -98,9 +116,17 @@ class RegisterPetActivity : AppCompatActivity() {
                 }
             }, year, month, day)
 
-            datePickerDialog.datePicker.maxDate = System.currentTimeMillis() // Limitar a la fecha actual como fecha máxima
+            datePickerDialog.datePicker.maxDate =
+                System.currentTimeMillis() // Limitar a la fecha actual como fecha máxima
             datePickerDialog.show()
         }
+
+        val btnSubmit = findViewById<Button>(R.id.btnSubmit)
+
+        btnSubmit.setOnClickListener {
+            registerPet()
+        }
+
     }
 
     private fun openGallery() {
@@ -113,6 +139,82 @@ class RegisterPetActivity : AppCompatActivity() {
         startActivityForResult(intent, CAPTURE_IMAGE)
     }
 
+    private fun registerPet() {
+        // Obtener referencias a los elementos de la interfaz de usuario
+        val etName = findViewById<EditText>(R.id.etName)
+        val etBreed = findViewById<EditText>(R.id.etBreed)
+        val spinnerSex = findViewById<Spinner>(R.id.spinnerSex)
+        val spinnerClassification = findViewById<Spinner>(R.id.spinnerClassification)
+        val spinnerSpecies = findViewById<Spinner>(R.id.spinnerSpecies)
+        val spinnerShelterState = findViewById<Spinner>(R.id.spinnerShelterState)
+        val etAdmissionDate = findViewById<EditText>(R.id.etAdmissionDate)
+        val checkboxAdoptionStatus = findViewById<CheckBox>(R.id.checkboxAdoptionStatus)
+        val checkboxPublicationStatus = findViewById<CheckBox>(R.id.checkboxPublicationStatus)
+        val etObservations = findViewById<EditText>(R.id.etObservations)
+        // Validar que los campos requeridos estén completos
+        if (etName.text.isEmpty() || etBreed.text.isEmpty() || etObservations.text.isEmpty() || etAdmissionDate.text.isEmpty() || spinnerSex.selectedItem == null ||
+            spinnerClassification.selectedItem == null || spinnerSpecies.selectedItem == null || spinnerShelterState.selectedItem == null
+        ) {
+            // Mostrar un mensaje de error al usuario indicando que los campos requeridos deben completarse.
+            Toast.makeText(
+                this,
+                "Por favor complete todos los campos requeridos",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
+            // Todos los campos requeridos están completos, continuar con el registro
+
+            // Obtener los valores de los elementos
+            val name = etName.text.toString()
+            val breed = etBreed.text.toString()
+            val sex = spinnerSex.selectedItem.toString()
+            val classification = spinnerClassification.selectedItem.toString()
+            val species = spinnerSpecies.selectedItem.toString()
+            val shelterState = spinnerShelterState.selectedItem.toString()
+            val isAdoptionStatus = checkboxAdoptionStatus.isChecked
+            val isPublicationStatus = checkboxPublicationStatus.isChecked
+            val observations = etObservations.text.toString()
+
+            val admissionDate = etAdmissionDate.text.toString()
+            val dateFormat = "dd/MM/yyyy"
+
+            val date = stringToDate(admissionDate, dateFormat)
+            if (date != null) {
+                val pet = Pet(
+                    TypeSpecies.valueOf(species),
+                    name,
+                    breed,
+                    TypeSex.valueOf(sex),
+                    TypeClassification.valueOf(classification),
+                    date,
+                    observations,
+                    TypeRefugeStatus.valueOf(shelterState),
+                    isAdoptionStatus,
+                    R.drawable.bulldog, // ambiar por imagen
+                    isPublicationStatus
+                )
+                println("pet: $pet")
+            } else {
+                Toast.makeText(
+                    this,
+                    "La fecha ingresada no es válida. El formato debe ser $dateFormat.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                etAdmissionDate.setText("")
+            }
+        }
+    }
+
+    fun stringToDate(dateString: String, dateFormat: String): Date? {
+        val format = SimpleDateFormat(dateFormat, Locale.getDefault())
+        try {
+            return format.parse(dateString)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+            return null
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val imgPet = findViewById<ImageView>(R.id.imgPet)
@@ -123,6 +225,7 @@ class RegisterPetActivity : AppCompatActivity() {
                     imageUri = data?.data
                     imgPet.setImageURI(imageUri)
                 }
+
                 CAPTURE_IMAGE -> {
                     // Asegúrate de que `data` no sea nulo antes de acceder a `data?.data`
                     if (data != null && data.extras != null) {

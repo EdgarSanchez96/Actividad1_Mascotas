@@ -6,9 +6,11 @@ import java.util.Date
 enum class TypeSpecies {
     CANINO, FELINO
 }
+
 enum class TypeSex {
     MACHO, HEMBRA
 }
+
 enum class TypeClassification {
     CACHORRO, ADULTO
 }
@@ -16,7 +18,8 @@ enum class TypeClassification {
 enum class TypeRefugeStatus {
     FIJO, TEMPORAL
 }
-data class Pet (
+
+data class Pet(
     val species: TypeSpecies,
     val name: String,
     val breed: String,
@@ -28,4 +31,4 @@ data class Pet (
     val adoption_status: Boolean,
     val image: Int,
     val publication_status: Boolean,
-    )
+)
