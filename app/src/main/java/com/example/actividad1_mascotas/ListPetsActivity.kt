@@ -17,16 +17,20 @@ import com.example.actividad1_mascotas.models.TypeSex
 import com.example.actividad1_mascotas.models.TypeSpecies
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONArray
+import java.io.File
 import java.io.InputStream
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 class ListPetsActivity : AppCompatActivity() {
-    //Creación de la lista de objetos Pet(Mascota) con cada uno de sus atributos anteriormente definidos en la clase Pet
+    //Creación de la lista de objetos Pet(Mascota)
     private val pets = mutableListOf<Pet>()
+
     //Se define una variable de tio RecyclerView
     private lateinit var rvPets: RecyclerView
+
     //Se define una variable de tipo PetAdapter
     private lateinit var petsAdapter: PetAdapter
 
@@ -49,39 +53,7 @@ class ListPetsActivity : AppCompatActivity() {
                 window.navigationBarColor = backgroundColor
             }
         }
-
-        try {
-            // Lee el archivo JSON desde el directorio "res/raw"
-            val inputStream: InputStream = resources.openRawResource(R.raw.pets)
-            val json = inputStream.bufferedReader().use { it.readText() }
-
-            // Parsea el JSON y agrega las mascotas a la lista
-            val jsonArray = JSONArray(json)
-            for (i in 0 until jsonArray.length()) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-
-                val pet = Pet(
-                    id = jsonObject.getInt("id"),
-                    species = TypeSpecies.valueOf(jsonObject.getString("species")),
-                    name = jsonObject.getString("name"),
-                    breed = jsonObject.getString("breed"),
-                    sex = TypeSex.valueOf(jsonObject.getString("sex")),
-                    classification = TypeClassification.valueOf(jsonObject.getString("classification")),
-                    adoption_date = dateFormat.parse(jsonObject.getString("adoption_date")),
-                    observation = jsonObject.getString("observation"),
-                    refuge_status = TypeRefugeStatus.valueOf(jsonObject.getString("refuge_status")),
-                    adoption_status = jsonObject.getBoolean("adoption_status"),
-                    image = resources.getIdentifier(jsonObject.getString("image"), "drawable", packageName),
-                    publication_status = jsonObject.getBoolean("publication_status")
-                )
-                pets.add(pet)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            println(e)
-        }
-
+        getPets()
         //Se llama al método para inicializar los componentes
         initComponent()
 
@@ -91,15 +63,71 @@ class ListPetsActivity : AppCompatActivity() {
         btnRegisterPet.setOnClickListener {
             val intent = Intent(this, RegisterPetActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
+
+    fun stringToDate(dateString: String, dateFormat: String): Date? {
+        val format = SimpleDateFormat(dateFormat, Locale.getDefault())
+        try {
+            return format.parse(dateString)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+            return null
+        }
+    }
+
+    private fun getPets() {
+        try {
+            val fileName = "pets.json"
+            val file = File(filesDir, fileName)
+            if (file.exists()) {
+                val json = file.readText()
+                val jsonArray = JSONArray(json)
+                println(jsonArray)
+                for (i in 0 until jsonArray.length()) {
+                    val jsonObject = jsonArray.getJSONObject(i)
+                    val dateFormat = "dd/MM/yyyy"
+                    val date = stringToDate(jsonObject.getString("adoption_date"), dateFormat)
+                    if (date != null) {
+                        val pet = Pet(
+                            id = jsonObject.getInt("id"),
+                            species = TypeSpecies.valueOf(jsonObject.getString("species")),
+                            name = jsonObject.getString("name"),
+                            breed = jsonObject.getString("breed"),
+                            sex = TypeSex.valueOf(jsonObject.getString("sex")),
+                            classification = TypeClassification.valueOf(jsonObject.getString("classification")),
+                            adoption_date = date,
+                            observation = jsonObject.getString("observation"),
+                            refuge_status = TypeRefugeStatus.valueOf(jsonObject.getString("refuge_status")),
+                            adoption_status = jsonObject.getBoolean("adoption_status"),
+                            image = resources.getIdentifier(
+                                jsonObject.getString("image"),
+                                "drawable",
+                                packageName
+                            ),
+                            publication_status = jsonObject.getBoolean("publication_status")
+                        )
+                        pets.add(pet)
+                    }
+                }
+            } else {
+                println(" no existe el archivo")
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println(e)
+        }
+    }
+
     //Función para inicializar los componentes
-    private fun initComponent(){
+    private fun initComponent() {
         rvPets = findViewById(R.id.rvPets)
     }
 
     //Función para inicializar el RecyclerView con su Adapter
-    private fun initUI(){
+    private fun initUI() {
         petsAdapter = PetAdapter(pets)
         rvPets.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
