@@ -4,11 +4,13 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.drawable.ColorDrawable
 import android.icu.util.Calendar
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
@@ -18,6 +20,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.actividad1_mascotas.models.Pet
 import com.example.actividad1_mascotas.models.TypeClassification
 import com.example.actividad1_mascotas.models.TypeRefugeStatus
@@ -27,6 +30,8 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.os.Build
+
 
 class RegisterPetActivity : AppCompatActivity() {
     private val PICK_IMAGE = 1
@@ -37,6 +42,20 @@ class RegisterPetActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_pet)
+        val constraintLayout = findViewById<ConstraintLayout>(R.id.mainConstraintLayout)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Obtiene el color de fondo del ConstraintLayout principal
+            val backgroundColor = (constraintLayout.background as? ColorDrawable)?.color
+            println(backgroundColor)
+
+            // Verifica si el color es nulo
+            if (backgroundColor != null) {
+                // Aplica el color al statusBarColor si no es nulo
+                window.statusBarColor = backgroundColor
+                window.navigationBarColor = backgroundColor
+            }
+        }
 
         val btnBack = findViewById<ImageButton>(R.id.btnBack)
 
@@ -237,4 +256,5 @@ class RegisterPetActivity : AppCompatActivity() {
             }
         }
     }
+
 }
