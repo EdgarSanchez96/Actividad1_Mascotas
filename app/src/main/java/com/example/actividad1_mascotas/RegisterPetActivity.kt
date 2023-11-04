@@ -205,10 +205,6 @@ class RegisterPetActivity : AppCompatActivity() {
             val date = stringToDate(admissionDate, dateFormat)
             if (date != null) {
                 try {
-                    // Obtener la lista actual de mascotas desde el JSON
-                    val inputStream: InputStream = resources.openRawResource(R.raw.pets)
-                    val json = inputStream.bufferedReader().use { it.readText() }
-
                     val fileName = "pets.json"
                     val fileRead = File(filesDir, fileName)
                     if (fileRead.exists()) {
@@ -220,7 +216,7 @@ class RegisterPetActivity : AppCompatActivity() {
                             val jsonObject = jsonArray.getJSONObject(i)
                             val date_pet =
                                 stringToDate(jsonObject.getString("adoption_date"), dateFormat)
-                            val imageName = jsonObject.getString("image") // Nombre del archivo de imagen en el almacenamiento interno
+                            val imageName = jsonObject.getString("image")+".png"
 
                             // Recupera el recurso de imagen desde el almacenamiento interno
                             val petImagePath = File(filesDir, imageName)
@@ -252,7 +248,8 @@ class RegisterPetActivity : AppCompatActivity() {
                         val nextId = petList.size + 1
 
                         val imageName = "bulldog"
-                        val petImagePath = File(filesDir, imageName)
+                        val extension = ".png"
+                        val petImagePath = File(filesDir, imageName+extension)
                         val imageBitmap = BitmapFactory.decodeFile(petImagePath.absolutePath)
                         val newPet = Pet(
                             nextId,
