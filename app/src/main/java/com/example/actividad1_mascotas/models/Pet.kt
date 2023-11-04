@@ -20,6 +20,7 @@ enum class TypeRefugeStatus {
 }
 
 data class Pet(
+    val id: Number,
     val species: TypeSpecies,
     val name: String,
     val breed: String,

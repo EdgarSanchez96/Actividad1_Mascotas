@@ -31,6 +31,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import android.os.Build
+import org.json.JSONArray
+import java.io.InputStream
 
 
 class RegisterPetActivity : AppCompatActivity() {
@@ -200,6 +202,7 @@ class RegisterPetActivity : AppCompatActivity() {
             val date = stringToDate(admissionDate, dateFormat)
             if (date != null) {
                 val pet = Pet(
+                    5,
                     TypeSpecies.valueOf(species),
                     name,
                     breed,

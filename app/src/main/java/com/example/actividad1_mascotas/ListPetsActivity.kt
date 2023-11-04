@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,94 +16,20 @@ import com.example.actividad1_mascotas.models.TypeRefugeStatus
 import com.example.actividad1_mascotas.models.TypeSex
 import com.example.actividad1_mascotas.models.TypeSpecies
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import org.json.JSONArray
+import java.io.InputStream
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class ListPetsActivity : AppCompatActivity() {
     //Creación de la lista de objetos Pet(Mascota) con cada uno de sus atributos anteriormente definidos en la clase Pet
-    private val pets = listOf(
-        Pet(
-            species = TypeSpecies.CANINO,
-            name = "Tobi",
-            breed = "Bulldog",
-            sex = TypeSex.MACHO,
-            classification = TypeClassification.ADULTO,
-            adoption_date = Date(),
-            observation = "Observación de Tobi",
-            refuge_status = TypeRefugeStatus.FIJO,
-            adoption_status = true,
-            image = R.drawable.bulldog,
-            publication_status = true
-        ),
-        Pet(
-            species = TypeSpecies.FELINO,
-            name = "Whiskers",
-            breed = "Siamés",
-            sex = TypeSex.HEMBRA,
-            classification = TypeClassification.ADULTO,
-            adoption_date = Date(),
-            observation = "Observación de Whiskers",
-            refuge_status = TypeRefugeStatus.TEMPORAL,
-            adoption_status = false,
-            image = R.drawable.siames,
-            publication_status = true
-        ),
-        Pet(
-            species = TypeSpecies.CANINO,
-            name = "Boby",
-            breed = "Husky",
-            sex = TypeSex.MACHO,
-            classification = TypeClassification.CACHORRO,
-            adoption_date = Date(),
-            observation = "Observación de Boby",
-            refuge_status = TypeRefugeStatus.FIJO,
-            adoption_status = true,
-            image = R.drawable.husky,
-            publication_status = true
-        ),
-        Pet(
-            species = TypeSpecies.FELINO,
-            name = "Banby",
-            breed = "Persa",
-            sex = TypeSex.HEMBRA,
-            classification = TypeClassification.ADULTO,
-            adoption_date = Date(),
-            observation = "Observación de Banby",
-            refuge_status = TypeRefugeStatus.FIJO,
-            adoption_status = false,
-            image = R.drawable.persa,
-            publication_status = true
-        ),
-        Pet(
-            species = TypeSpecies.CANINO,
-            name = "Leopoldo",
-            breed = "Pastor Alemán",
-            sex = TypeSex.MACHO,
-            classification = TypeClassification.CACHORRO,
-            adoption_date = Date(),
-            observation = "Observación de Leopoldo",
-            refuge_status = TypeRefugeStatus.TEMPORAL,
-            adoption_status = false,
-            image = R.drawable.pastor_aleman,
-            publication_status = true
-        ),
-        Pet(
-            species = TypeSpecies.FELINO,
-            name = "Rogelio",
-            breed = "Azul Ruso",
-            sex = TypeSex.MACHO,
-            classification = TypeClassification.CACHORRO,
-            adoption_date = Date(),
-            observation = "Observación de Rogelio",
-            refuge_status = TypeRefugeStatus.FIJO,
-            adoption_status = true,
-            image = R.drawable.azul_ruso,
-            publication_status = true
-        )
-    )
+    private val pets = mutableListOf<Pet>()
     //Se define una variable de tio RecyclerView
     private lateinit var rvPets: RecyclerView
     //Se define una variable de tipo PetAdapter
     private lateinit var petsAdapter: PetAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -122,6 +49,39 @@ class ListPetsActivity : AppCompatActivity() {
                 window.navigationBarColor = backgroundColor
             }
         }
+
+        try {
+            // Lee el archivo JSON desde el directorio "res/raw"
+            val inputStream: InputStream = resources.openRawResource(R.raw.pets)
+            val json = inputStream.bufferedReader().use { it.readText() }
+
+            // Parsea el JSON y agrega las mascotas a la lista
+            val jsonArray = JSONArray(json)
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+
+                val pet = Pet(
+                    id = jsonObject.getInt("id"),
+                    species = TypeSpecies.valueOf(jsonObject.getString("species")),
+                    name = jsonObject.getString("name"),
+                    breed = jsonObject.getString("breed"),
+                    sex = TypeSex.valueOf(jsonObject.getString("sex")),
+                    classification = TypeClassification.valueOf(jsonObject.getString("classification")),
+                    adoption_date = dateFormat.parse(jsonObject.getString("adoption_date")),
+                    observation = jsonObject.getString("observation"),
+                    refuge_status = TypeRefugeStatus.valueOf(jsonObject.getString("refuge_status")),
+                    adoption_status = jsonObject.getBoolean("adoption_status"),
+                    image = resources.getIdentifier(jsonObject.getString("image"), "drawable", packageName),
+                    publication_status = jsonObject.getBoolean("publication_status")
+                )
+                pets.add(pet)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            println(e)
+        }
+
         //Se llama al método para inicializar los componentes
         initComponent()
 
