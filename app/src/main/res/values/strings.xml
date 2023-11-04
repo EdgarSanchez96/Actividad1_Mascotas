@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Patitas Valientes</string>
-    <string name="titleRecyclerView">Listado Mascotas Adopción</string>
+    <string name="titleRecyclerView">Listado de Mascotas Adopción</string>
 </resources>

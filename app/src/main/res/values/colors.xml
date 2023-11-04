@@ -5,7 +5,11 @@
     <color name="itemCardViewColor">#00324C</color>
     <color name="mainBackground">#05a197</color>
     <color name="mainBackgroundWhite">#ffffff</color>
+    <color name="mainBackgroundNigth">#3c3c3c</color>
     <color name="primaryButtonColor">#05a197</color>
     <color name="secondaryButtonColor">#3c3c3c</color>
     <color name="navigationColor">#05a197</color>
+    <color name="grayColorTwo">#bbbbbb</color>
+    <color name="grayColor">#3c3c3c</color>
+    <color name="grayColorLigth">#f4f4f4</color>
 </resources>
