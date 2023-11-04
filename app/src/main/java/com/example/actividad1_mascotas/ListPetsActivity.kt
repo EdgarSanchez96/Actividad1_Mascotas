@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -142,6 +143,16 @@ class ListPetsActivity : AppCompatActivity() {
     private fun initUI(){
         petsAdapter = PetAdapter(pets)
         rvPets.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        //Evento al realizar un click sobre un item del RecyclerView
+        petsAdapter.setOnRecyclerViewClickListener(object : PetAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                //Imprime un mensaje por consola de la acción del click
+                Log.d("RecyclerViewClick", "Hiciste clic en el elemento en la posición $position")
+                //Realizar los Intent para rediriguir a la pantalla de detalle al hacer click a un item del RecyclerView...
+            }
+        })
+
         rvPets.adapter = petsAdapter
     }
 }
