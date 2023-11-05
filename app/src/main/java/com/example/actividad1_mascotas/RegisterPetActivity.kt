@@ -313,6 +313,7 @@ class RegisterPetActivity : AppCompatActivity() {
                             val imageBitmap =
                                 MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
                             imgPet.setImageBitmap(imageBitmap)
+                            imageBit = imageBitmap
                         } catch (e: IOException) {
                             e.printStackTrace()
                         }
@@ -323,6 +324,7 @@ class RegisterPetActivity : AppCompatActivity() {
                     if (data != null && data.extras != null) {
                         val imageBitmap = data.extras!!.get("data") as Bitmap
                         imgPet.setImageBitmap(imageBitmap)
+                        imageBit = imageBitmap
                     }
                 }
             }
