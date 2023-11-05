@@ -10,7 +10,7 @@
     "observation": "Observación de Tobi",
     "refuge_status": "FIJO",
     "adoption_status": true,
-    "image": "bulldog",
+    "image": "image_1",
     "publication_status": true
   },
   {
@@ -24,7 +24,7 @@
     "observation": "Observación de Whiskers",
     "refuge_status": "TEMPORAL",
     "adoption_status": false,
-    "image": "siames",
+    "image": "image_2",
     "publication_status": true
   },
   {
@@ -38,7 +38,7 @@
     "observation": "Observación de Boby",
     "refuge_status": "FIJO",
     "adoption_status": true,
-    "image": "husky",
+    "image": "image_3",
     "publication_status": true
   },
   {
@@ -52,35 +52,7 @@
     "observation": "Observación de Banby",
     "refuge_status": "FIJO",
     "adoption_status": false,
-    "image": "persa",
-    "publication_status": true
-  },
-  {
-    "id": 5,
-    "species": "CANINO",
-    "name": "Leopoldo",
-    "breed": "Pastor Alemán",
-    "sex": "MACHO",
-    "classification": "CACHORRO",
-    "adoption_date": "03/11/2023",
-    "observation": "Observación de Leopoldo",
-    "refuge_status": "TEMPORAL",
-    "adoption_status": false,
-    "image": "pastor_aleman",
-    "publication_status": true
-  },
-  {
-    "id": 6,
-    "species": "FELINO",
-    "name": "Rogelio",
-    "breed": "Azul Ruso",
-    "sex": "MACHO",
-    "classification": "CACHORRO",
-    "adoption_date": "03/11/2023",
-    "observation": "Observación de Rogelio",
-    "refuge_status": "FIJO",
-    "adoption_status": true,
-    "image": "azul_ruso",
+    "image": "image_4",
     "publication_status": true
   }
 ]

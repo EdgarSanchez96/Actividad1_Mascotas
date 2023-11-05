@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:src="@drawable/ic_add_pet"
-        app:backgroundTint="@color/primaryButtonColor"
+        app:backgroundTint="@color/grayColorTwo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
