@@ -47,11 +47,8 @@ class DetailsActivity : AppCompatActivity() {
         val constraintLayout = findViewById<ConstraintLayout>(R.id.mainConstraintLayout)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Obtiene el color de fondo del ConstraintLayout principal
             val backgroundColor = (constraintLayout.background as? ColorDrawable)?.color
-            // Verifica si el color es nulo
             if (backgroundColor != null) {
-                // Aplica el color al statusBarColor si no es nulo
                 window.statusBarColor = backgroundColor
                 window.navigationBarColor = backgroundColor
             }
@@ -59,77 +56,31 @@ class DetailsActivity : AppCompatActivity() {
 
         val data: Bundle? = intent.extras
         if (data != null) {
-            // Al obtener la posición es necesario restarle 1
-            // Esto se hace porque el array comienza desde 0
             var id: Int = data.getInt("id") - 1
+            val generalFunctions = GeneralFunctions(filesDir)
+            val petList = generalFunctions.getListPets()
+            
+            // Se recupera el registro que se presentara en detalle
+            var petObtain: Pet = petList.get(id)
 
-            // El siguiente codigo permite recorrer el json que utiliza la app
-            try {
-                val fileName = "pets.json"
-                val fileRead = File(filesDir, fileName)
-                if (fileRead.exists()) {
-                    val json = fileRead.readText()
-                    val jsonArray = JSONArray(json)
+            // Agregar datos del json a la vista
+            imgPet.setImageBitmap(petObtain.image)
+            txtName.text = petObtain.name
+            txtSpecie.text = petObtain.species.toString()
+            txtBreed.text = petObtain.breed
+            txtSex.text = petObtain.sex.toString()
+            txtClassification.text = petObtain.classification.toString()
+            txtAdoptionDate.text = petObtain.adoption_date.toString()
+            txtObservation.text = petObtain.observation.toString()
+            txtRefugeStatus.text = petObtain.refuge_status.toString()
+            var adopStatus: Boolean = petObtain.adoption_status
+            txtAdoptionStatus.text = if (adopStatus) "SI" else "NO"
+            var publicStatus = petObtain.publication_status
+            txtPublicationStatus.text = if (publicStatus) "SI" else "NO"
 
-                    val petList = mutableListOf<Pet>()
-                    for (i in 0 until jsonArray.length()) {
-                        val dateFormat = "dd/MM/yyyy"
-                        val jsonObject = jsonArray.getJSONObject(i)
-                        val date_pet =
-                            stringToDate(jsonObject.getString("adoption_date"), dateFormat)
-                        val imageName = jsonObject.getString("image") + ".png"
-
-                        // Recupera el recurso de imagen desde el almacenamiento interno
-                        val petImagePath = File(filesDir, imageName)
-                        val imageBitmap = BitmapFactory.decodeFile(petImagePath.absolutePath)
-                        if (date_pet != null) {
-                            val pet = Pet(
-                                id = jsonObject.getInt("id"),
-                                species = TypeSpecies.valueOf(jsonObject.getString("species")),
-                                name = jsonObject.getString("name"),
-                                breed = jsonObject.getString("breed"),
-                                sex = TypeSex.valueOf(jsonObject.getString("sex")),
-                                classification = TypeClassification.valueOf(
-                                    jsonObject.getString(
-                                        "classification"
-                                    )
-                                ),
-                                adoption_date = date_pet,
-                                observation = jsonObject.getString("observation"),
-                                refuge_status = TypeRefugeStatus.valueOf(jsonObject.getString("refuge_status")),
-                                adoption_status = jsonObject.getBoolean("adoption_status"),
-                                image = imageBitmap,
-                                publication_status = jsonObject.getBoolean("publication_status")
-                            )
-                            petList.add(pet)
-                        }
-                    }
-
-                    // Se recupera el registro que se presentara en detalle
-                    var petObtain: Pet = petList.get(id)
-
-                    // Agregar datos del json a la vista
-                    imgPet.setImageBitmap(petObtain.image)
-                    txtName.text = petObtain.name
-                    txtSpecie.text = petObtain.species.toString()
-                    txtBreed.text = petObtain.breed
-                    txtSex.text = petObtain.sex.toString()
-                    txtClassification.text = petObtain.classification.toString()
-                    txtAdoptionDate.text = petObtain.adoption_date.toString()
-                    txtObservation.text = petObtain.observation.toString()
-                    txtRefugeStatus.text = petObtain.refuge_status.toString()
-                    var adopStatus: Boolean = petObtain.adoption_status
-                    txtAdoptionStatus.text = if (adopStatus) "SI" else "NO"
-                    var publicStatus = petObtain.publication_status
-                    txtPublicationStatus.text = if (publicStatus) "SI" else "NO"
-
-                }
-            } catch (e: IOException) {
-                println(e)
-            }
         }
 
-        // Boton volver
+
         val btnBack = findViewById<ImageButton>(R.id.btnBack)
 
         btnBack.setOnClickListener {
@@ -138,15 +89,5 @@ class DetailsActivity : AppCompatActivity() {
             finish()
         }
 
-    }
-
-    fun stringToDate(dateString: String, dateFormat: String): Date? {
-        val format = SimpleDateFormat(dateFormat, Locale.getDefault())
-        try {
-            return format.parse(dateString)
-        } catch (e: ParseException) {
-            e.printStackTrace()
-            return null
-        }
     }
 }
