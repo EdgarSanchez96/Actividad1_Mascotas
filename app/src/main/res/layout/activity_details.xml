@@ -6,86 +6,205 @@
     android:layout_height="match_parent"
     tools:context=".DetailsActivity">
 
+    <Button
+        android:id="@+id/btnVolver"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Volver"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
         android:id="@+id/imgPet"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/lblName"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/lblName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nombre:"
-        app:layout_constraintTop_toBottomOf="@id/imgPet"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:text="Nombre:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgPet" />
 
     <TextView
         android:id="@+id/txtName"
         android:layout_width="152dp"
         android:layout_height="20dp"
-        app:layout_constraintTop_toTopOf="@id/lblName"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@id/lblName"
-        android:layout_marginStart="8dp" />
+        app:layout_constraintTop_toTopOf="@id/lblName" />
 
     <TextView
         android:id="@+id/lblSpecie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Especie:"
-        app:layout_constraintTop_toBottomOf="@id/lblName"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:text="Especie:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblName" />
 
     <TextView
         android:id="@+id/txtSpecie"
         android:layout_width="152dp"
         android:layout_height="20dp"
-        app:layout_constraintTop_toTopOf="@id/lblSpecie"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@id/lblSpecie"
-        android:layout_marginStart="8dp" />
+        app:layout_constraintTop_toTopOf="@id/lblSpecie" />
 
     <TextView
         android:id="@+id/lblBread"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Raza:"
-        app:layout_constraintTop_toBottomOf="@id/lblSpecie"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:text="Raza:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblSpecie" />
 
     <TextView
         android:id="@+id/txtBreed"
         android:layout_width="152dp"
         android:layout_height="20dp"
-        app:layout_constraintTop_toTopOf="@id/lblBread"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@id/lblBread"
-        android:layout_marginStart="8dp" />
+        app:layout_constraintTop_toTopOf="@id/lblBread" />
 
     <TextView
         android:id="@+id/lblSex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sexo:"
-        app:layout_constraintTop_toBottomOf="@id/lblBread"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:text="Sexo:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblBread" />
 
     <TextView
         android:id="@+id/txtSex"
         android:layout_width="152dp"
         android:layout_height="20dp"
-        app:layout_constraintTop_toTopOf="@id/lblSex"
+        android:layout_marginStart="8dp"
         app:layout_constraintStart_toEndOf="@id/lblSex"
-        android:layout_marginStart="8dp" />
+        app:layout_constraintTop_toTopOf="@id/lblSex" />
+
+    <TextView
+        android:id="@+id/lblClassification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Clasificación:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblSex" />
+
+    <TextView
+        android:id="@+id/txtClassification"
+        android:layout_width="152dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/lblClassification"
+        app:layout_constraintTop_toTopOf="@id/lblClassification" />
+
+    <TextView
+        android:id="@+id/lblAdoptionDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Fecha de Adopción:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblClassification" />
+
+    <TextView
+        android:id="@+id/txtAdoptionDate"
+        android:layout_width="152dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/lblAdoptionDate"
+        app:layout_constraintTop_toTopOf="@id/lblAdoptionDate" />
+
+    <TextView
+        android:id="@+id/lblObservation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Observación:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblAdoptionDate" />
+
+    <TextView
+        android:id="@+id/txtObservation"
+        android:layout_width="152dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/lblObservation"
+        app:layout_constraintTop_toTopOf="@id/lblObservation" />
+
+    <TextView
+        android:id="@+id/lblRefugeStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Estado refugio:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblObservation" />
+
+    <TextView
+        android:id="@+id/txtRefugeStatus"
+        android:layout_width="152dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/lblRefugeStatus"
+        app:layout_constraintTop_toTopOf="@id/lblRefugeStatus" />
+
+    <TextView
+        android:id="@+id/lblAdoptionStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Estado de adopción:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblRefugeStatus" />
+
+    <TextView
+        android:id="@+id/txtAdoptionStatus"
+        android:layout_width="152dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/lblAdoptionStatus"
+        app:layout_constraintTop_toTopOf="@id/lblAdoptionStatus" />
+
+    <TextView
+        android:id="@+id/lblPublicationStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Estado de publicación:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/lblAdoptionStatus" />
+
+    <TextView
+        android:id="@+id/txtPublicationStatus"
+        android:layout_width="152dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/lblPublicationStatus"
+        app:layout_constraintTop_toTopOf="@id/lblPublicationStatus" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
