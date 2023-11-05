@@ -3,6 +3,7 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/allan</item>
         <item>@font/montserrat_italic</item>
+        <item>@font/montserrat_medium</item>
         <item>@font/montserrat_thin</item>
     </array>
 </resources>

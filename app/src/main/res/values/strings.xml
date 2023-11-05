@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">Patitas Valientes</string>
     <string name="titleRecyclerView">Listado de Mascotas Adopción</string>
+    <string name="name_text">Nombre:</string>
+    <string name="specie_text">Especie:</string>
+    <string name="breed_text">Raza:</string>
+    <string name="sex_text">Sexo:</string>
+    <string name="classification_text">Clasificación:</string>
+    <string name="adoption_date_text">Fecha de Adopción:</string>
+    <string name="observation_text">Observación:</string>
+    <string name="refuge_status_text">Estado refugio:</string>
+    <string name="adoption_status_text">Estado de adopción:</string>
+    <string name="publication_status_text">Estado de publicación:</string>
 </resources>

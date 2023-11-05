@@ -2,16 +2,21 @@ package com.example.actividad1_mascotas
 
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.actividad1_mascotas.models.Pet
 import com.example.actividad1_mascotas.models.TypeClassification
 import com.example.actividad1_mascotas.models.TypeRefugeStatus
 import com.example.actividad1_mascotas.models.TypeSex
 import com.example.actividad1_mascotas.models.TypeSpecies
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.json.JSONArray
 import java.io.File
 import java.io.IOException
@@ -38,6 +43,19 @@ class DetailsActivity : AppCompatActivity() {
         var txtRefugeStatus: TextView = findViewById(R.id.txtRefugeStatus)
         var txtAdoptionStatus: TextView = findViewById(R.id.txtAdoptionStatus)
         var txtPublicationStatus: TextView = findViewById(R.id.txtPublicationStatus)
+
+        val constraintLayout = findViewById<ConstraintLayout>(R.id.mainConstraintLayout)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Obtiene el color de fondo del ConstraintLayout principal
+            val backgroundColor = (constraintLayout.background as? ColorDrawable)?.color
+            // Verifica si el color es nulo
+            if (backgroundColor != null) {
+                // Aplica el color al statusBarColor si no es nulo
+                window.statusBarColor = backgroundColor
+                window.navigationBarColor = backgroundColor
+            }
+        }
 
         val data: Bundle? = intent.extras
         if (data != null) {
@@ -112,7 +130,7 @@ class DetailsActivity : AppCompatActivity() {
         }
 
         // Boton volver
-        val btnBack: Button = findViewById(R.id.btnVolver)
+        val btnBack = findViewById<ImageButton>(R.id.btnBack)
 
         btnBack.setOnClickListener {
             val intent = Intent(this, ListPetsActivity::class.java)
