@@ -45,8 +45,6 @@ class ListPetsActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // Obtiene el color de fondo del ConstraintLayout principal
             val backgroundColor = (constraintLayout.background as? ColorDrawable)?.color
-            println(backgroundColor)
-
             // Verifica si el color es nulo
             if (backgroundColor != null) {
                 // Aplica el color al statusBarColor si no es nulo
@@ -85,7 +83,6 @@ class ListPetsActivity : AppCompatActivity() {
             if (file.exists()) {
                 val json = file.readText()
                 val jsonArray = JSONArray(json)
-                println(jsonArray)
                 for (i in 0 until jsonArray.length()) {
                     val jsonObject = jsonArray.getJSONObject(i)
                     val dateFormat = "dd/MM/yyyy"

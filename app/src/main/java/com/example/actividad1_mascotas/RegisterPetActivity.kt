@@ -5,6 +5,7 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.icu.util.Calendar
 import android.net.Uri
@@ -54,8 +55,6 @@ class RegisterPetActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // Obtiene el color de fondo del ConstraintLayout principal
             val backgroundColor = (constraintLayout.background as? ColorDrawable)?.color
-            println(backgroundColor)
-
             // Verifica si el color es nulo
             if (backgroundColor != null) {
                 // Aplica el color al statusBarColor si no es nulo
@@ -178,8 +177,11 @@ class RegisterPetActivity : AppCompatActivity() {
         val checkboxAdoptionStatus = findViewById<CheckBox>(R.id.checkboxAdoptionStatus)
         val checkboxPublicationStatus = findViewById<CheckBox>(R.id.checkboxPublicationStatus)
         val etObservations = findViewById<EditText>(R.id.etObservations)
+        val ivPet = findViewById<ImageView>(R.id.imgPet)
+        val imageBitmap = (ivPet.drawable as BitmapDrawable).bitmap
+
         if (etName.text.isEmpty() || etBreed.text.isEmpty() || etObservations.text.isEmpty() || etAdmissionDate.text.isEmpty() || spinnerSex.selectedItem == null ||
-            spinnerClassification.selectedItem == null || spinnerSpecies.selectedItem == null || spinnerShelterState.selectedItem == null
+            spinnerClassification.selectedItem == null || spinnerSpecies.selectedItem == null || spinnerShelterState.selectedItem == null || imageBitmap == null
         ) {
             Toast.makeText(
                 this,
@@ -249,14 +251,9 @@ class RegisterPetActivity : AppCompatActivity() {
                         val nextId = petList.size + 1
 
                         val imageName = "image_" + nextId.toString()
-                        println(" imageName: $imageName")
                         val imageBitToSave = imageBit
                         if (imageBitToSave != null) {
                             saveImageToInternalStorage(imageBitToSave, imageName)
-
-                            val petImagePath = File(filesDir, imageName)
-                            println(petImagePath)
-                            val imageBitmap = BitmapFactory.decodeFile(petImagePath.absolutePath)
                             val newPet = Pet(
                                 nextId,
                                 TypeSpecies.valueOf(species),
@@ -273,8 +270,6 @@ class RegisterPetActivity : AppCompatActivity() {
                             )
                             // Agregar la nueva mascota a la lista
                             petList.add(newPet)
-                            println("pet list: $petList")
-                            println("pet: $newPet")
 
                             // Convertir la lista de mascotas a JSON
                             val newJsonArray = JSONArray()
@@ -302,7 +297,6 @@ class RegisterPetActivity : AppCompatActivity() {
 
                             val file = File(filesDir, "pets.json")
                             val newJsonString = newJsonArray.toString()
-                            println("pet newJsonString: $newJsonString")
                             file.writeText(newJsonString)
 
                             Toast.makeText(
@@ -315,6 +309,9 @@ class RegisterPetActivity : AppCompatActivity() {
                             val intent = Intent(this, ListPetsActivity::class.java)
                             startActivity(intent)
                             finish()
+                        } else {
+                            Toast.makeText(this, "La imagen es nula", Toast.LENGTH_SHORT).show()
+
                         }
 
 
@@ -379,6 +376,7 @@ class RegisterPetActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 
     private fun saveImageToInternalStorage(imageBitmap: Bitmap, imageName: String) {

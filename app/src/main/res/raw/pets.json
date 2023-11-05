@@ -54,33 +54,5 @@
     "adoption_status": false,
     "image": "image_4",
     "publication_status": true
-  },
-  {
-    "id": 5,
-    "species": "CANINO",
-    "name": "Leopoldo",
-    "breed": "Pastor Alemán",
-    "sex": "MACHO",
-    "classification": "CACHORRO",
-    "adoption_date": "03/11/2023",
-    "observation": "Observación de Leopoldo",
-    "refuge_status": "TEMPORAL",
-    "adoption_status": false,
-    "image": "image_5",
-    "publication_status": true
-  },
-  {
-    "id": 6,
-    "species": "FELINO",
-    "name": "Rogelio",
-    "breed": "Azul Ruso",
-    "sex": "MACHO",
-    "classification": "CACHORRO",
-    "adoption_date": "03/11/2023",
-    "observation": "Observación de Rogelio",
-    "refuge_status": "FIJO",
-    "adoption_status": true,
-    "image": "image_6",
-    "publication_status": true
   }
 ]
