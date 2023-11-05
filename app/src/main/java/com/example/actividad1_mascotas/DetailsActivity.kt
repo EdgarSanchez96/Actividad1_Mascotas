@@ -1,7 +1,9 @@
 package com.example.actividad1_mascotas
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -27,22 +29,23 @@ class DetailsActivity : AppCompatActivity() {
         val imgPet: ImageView = findViewById(R.id.imgPet)
 
         val txtName: TextView = findViewById(R.id.txtName)
-//        val txtSpecie: TextView = findViewById(R.id.txtSpecie)
-//        val txtBreed: TextView = findViewById(R.id.txtBreed)
-//        val txtSex: TextView = findViewById(R.id.txtSex)
-
-//        val txtClassification: TextView = findViewById(R.id.txtClassification)
-//        val txtAdoptionDate: TextView = findViewById(R.id.txtAdoptionDate)
-//        val txtObservation: TextView = findViewById(R.id.txtObservation)
-//        val txtRefugeStatus: TextView = findViewById(R.id.txtRefugeStatus)
-//        val txtAdoptionStatus: TextView = findViewById(R.id.txtAdoptionStatus)
-//        val txtImage: TextView = findViewById(R.id.txtImage)
-//        val txtPublicationStatus: TextView = findViewById(R.id.txtPublicationStatus)
+        val txtSpecie: TextView = findViewById(R.id.txtSpecie)
+        val txtBreed: TextView = findViewById(R.id.txtBreed)
+        val txtSex: TextView = findViewById(R.id.txtSex)
+        var txtClassification: TextView = findViewById(R.id.txtClassification)
+        var txtAdoptionDate: TextView = findViewById(R.id.txtAdoptionDate)
+        var txtObservation: TextView = findViewById(R.id.txtObservation)
+        var txtRefugeStatus: TextView = findViewById(R.id.txtRefugeStatus)
+        var txtAdoptionStatus: TextView = findViewById(R.id.txtAdoptionStatus)
+        var txtPublicationStatus: TextView = findViewById(R.id.txtPublicationStatus)
 
         val data: Bundle? = intent.extras
         if (data != null) {
-            var id: Int = data.getInt("id")
-            
+            // Al obtener la posición es necesario restarle 1
+            // Esto se hace porque el array comienza desde 0
+            var id: Int = data.getInt("id") - 1
+
+            // El siguiente codigo permite recorrer el json que utiliza la app
             try {
                 val fileName = "pets.json"
                 val fileRead = File(filesDir, fileName)
@@ -56,7 +59,7 @@ class DetailsActivity : AppCompatActivity() {
                         val jsonObject = jsonArray.getJSONObject(i)
                         val date_pet =
                             stringToDate(jsonObject.getString("adoption_date"), dateFormat)
-                        val imageName = jsonObject.getString("image")+".png"
+                        val imageName = jsonObject.getString("image") + ".png"
 
                         // Recupera el recurso de imagen desde el almacenamiento interno
                         val petImagePath = File(filesDir, imageName)
@@ -84,15 +87,39 @@ class DetailsActivity : AppCompatActivity() {
                         }
                     }
 
-                    var petObtain:Pet = petList.get(id)
+                    // Se recupera el registro que se presentara en detalle
+                    var petObtain: Pet = petList.get(id)
 
+                    // Agregar datos del json a la vista
                     imgPet.setImageBitmap(petObtain.image)
                     txtName.text = petObtain.name
+                    txtSpecie.text = petObtain.species.toString()
+                    txtBreed.text = petObtain.breed
+                    txtSex.text = petObtain.sex.toString()
+                    txtClassification.text = petObtain.classification.toString()
+                    txtAdoptionDate.text = petObtain.adoption_date.toString()
+                    txtObservation.text = petObtain.observation.toString()
+                    txtRefugeStatus.text = petObtain.refuge_status.toString()
+                    var adopStatus: Boolean = petObtain.adoption_status
+                    txtAdoptionStatus.text = if (adopStatus) "SI" else "NO"
+                    var publicStatus = petObtain.publication_status
+                    txtPublicationStatus.text = if (publicStatus) "SI" else "NO"
+
                 }
             } catch (e: IOException) {
                 println(e)
             }
         }
+
+        // Boton volver
+        val btnBack: Button = findViewById(R.id.btnVolver)
+
+        btnBack.setOnClickListener {
+            val intent = Intent(this, ListPetsActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
     }
 
     fun stringToDate(dateString: String, dateFormat: String): Date? {
