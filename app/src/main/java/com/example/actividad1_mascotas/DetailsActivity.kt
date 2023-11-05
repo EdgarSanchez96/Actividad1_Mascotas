@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.actividad1_mascotas.models.Pet
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -49,6 +51,11 @@ class DetailsActivity : AppCompatActivity() {
             // Se recupera el registro que se presentara en detalle
             var petObtain: Pet = petList.get(id)
 
+            // Se modifica el formato de presentación del campo fecha admisión dd/MM/yyyy
+            val dateFormat = "dd/MM/yyyy"
+            val sdf = SimpleDateFormat(dateFormat, Locale.getDefault())
+            var date =  petObtain.adoption_date
+
             // Agregar datos del json a la vista
             imgPet.setImageBitmap(petObtain.image)
             txtName.text = petObtain.name
@@ -56,7 +63,7 @@ class DetailsActivity : AppCompatActivity() {
             txtBreed.text = petObtain.breed
             txtSex.text = petObtain.sex.toString()
             txtClassification.text = petObtain.classification.toString()
-            txtAdoptionDate.text = petObtain.adoption_date.toString()
+            txtAdoptionDate.text = sdf.format(date)
             txtObservation.text = petObtain.observation.toString()
             txtRefugeStatus.text = petObtain.refuge_status.toString()
             var adopStatus: Boolean = petObtain.adoption_status
