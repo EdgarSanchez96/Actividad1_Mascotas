@@ -44,33 +44,28 @@ class RegisterPetActivity : AppCompatActivity() {
     private var imageUri: Uri? = null
     private var imageBit: Bitmap? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register_pet)
         val constraintLayout = findViewById<ConstraintLayout>(R.id.mainConstraintLayout)
         imageBit = BitmapFactory.decodeResource(resources, R.drawable.image_6)
 
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Obtiene el color de fondo del ConstraintLayout principal
             val backgroundColor = (constraintLayout.background as? ColorDrawable)?.color
-            // Verifica si el color es nulo
             if (backgroundColor != null) {
-                // Aplica el color al statusBarColor si no es nulo
                 window.statusBarColor = backgroundColor
                 window.navigationBarColor = backgroundColor
             }
         }
 
         val btnBack = findViewById<ImageButton>(R.id.btnBack)
-
         btnBack.setOnClickListener {
             val intent = Intent(this, ListPetsActivity::class.java)
             startActivity(intent)
             finish()
         }
 
+        // Permite crear un alertDialog para que seleccione como quieree cargar la imagen
         val btnLoadImage = findViewById<Button>(R.id.btnLoadImage)
         btnLoadImage.setOnClickListener {
             val items = arrayOf("Seleccionar de la galería", "Tomar una foto")
@@ -86,6 +81,7 @@ class RegisterPetActivity : AppCompatActivity() {
             dialog.show()
         }
 
+        // Cargar los spinners con los items de los ENUMS
         val spinnerSpecies = findViewById<Spinner>(R.id.spinnerSpecies)
         val spinnerSex = findViewById<Spinner>(R.id.spinnerSex)
         val spinnerClassification = findViewById<Spinner>(R.id.spinnerClassification)
@@ -119,6 +115,8 @@ class RegisterPetActivity : AppCompatActivity() {
         spinnerClassification.adapter = classificationAdapter
         spinnerShelterState.adapter = refugeStatusAdapter
 
+        // Permite que al seleccionar fecha se habra el calendario y seleccione la fehca y se formatee
+        // para mostrar al usuario, asi mismo de controlar que no seleccione fechas posteriores al dia de hoy
         val etAdmissionDate = findViewById<EditText>(R.id.etAdmissionDate)
         etAdmissionDate.setOnClickListener {
             val calendar = Calendar.getInstance()
@@ -128,28 +126,25 @@ class RegisterPetActivity : AppCompatActivity() {
 
             val datePickerDialog = DatePickerDialog(this, { _, year, month, dayOfMonth ->
                 val selectedDate =
-                    "$dayOfMonth/${month + 1}/$year" // Formatear la fecha como desees
+                    "$dayOfMonth/${month + 1}/$year"
 
                 val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 val selectedDateDate = sdf.parse(selectedDate)
-                val currentDate = Date() // Obtener la fecha actual
+                val currentDate = Date()
 
                 if (selectedDateDate != null && !selectedDateDate.after(currentDate)) {
-                    // La fecha seleccionada es válida (anterior o igual a la fecha actual)
                     etAdmissionDate.setText(selectedDate)
                 } else {
-                    // La fecha seleccionada es futura, muestra un mensaje de error
                     Toast.makeText(this, "Selecciona una fecha válida", Toast.LENGTH_SHORT).show()
                 }
             }, year, month, day)
 
             datePickerDialog.datePicker.maxDate =
-                System.currentTimeMillis() // Limitar a la fecha actual como fecha máxima
+                System.currentTimeMillis()
             datePickerDialog.show()
         }
 
         val btnSubmit = findViewById<Button>(R.id.btnSubmit)
-
         btnSubmit.setOnClickListener {
             registerPet()
         }
@@ -166,7 +161,9 @@ class RegisterPetActivity : AppCompatActivity() {
         startActivityForResult(intent, CAPTURE_IMAGE)
     }
 
+    // Funcionalidad para registrar una mascota
     private fun registerPet() {
+        // Obtener los campos y verificar que este completos
         val etName = findViewById<EditText>(R.id.etName)
         val etBreed = findViewById<EditText>(R.id.etBreed)
         val spinnerSex = findViewById<Spinner>(R.id.spinnerSex)
@@ -190,7 +187,6 @@ class RegisterPetActivity : AppCompatActivity() {
             ).show()
         } else {
             // Todos los campos requeridos están completos, continuar con el registro
-
             // Obtener los valores de los elementos
             val name = etName.text.toString()
             val breed = etBreed.text.toString()
@@ -201,122 +197,79 @@ class RegisterPetActivity : AppCompatActivity() {
             val isAdoptionStatus = checkboxAdoptionStatus.isChecked
             val isPublicationStatus = checkboxPublicationStatus.isChecked
             val observations = etObservations.text.toString()
-
             val admissionDate = etAdmissionDate.text.toString()
             val dateFormat = "dd/MM/yyyy"
-
             val date = stringToDate(admissionDate, dateFormat)
             if (date != null) {
                 try {
-                    val fileName = "pets.json"
-                    val fileRead = File(filesDir, fileName)
-                    if (fileRead.exists()) {
-                        val json = fileRead.readText()
-                        val jsonArray = JSONArray(json)
+                    val generalFunctions = GeneralFunctions(filesDir)
+                    val petsList = generalFunctions.getListPets()
+                    val petList = mutableListOf<Pet>()
+                    petList.clear()
+                    petList.addAll(petsList)
+                    val nextId = petList.size + 1
+                    val imageName = "image_" + nextId.toString()
+                    val imageBitToSave = imageBit
+                    if (imageBitToSave != null) {
+                        saveImageToInternalStorage(imageBitToSave, imageName)
+                        val newPet = Pet(
+                            nextId,
+                            TypeSpecies.valueOf(species),
+                            name,
+                            breed,
+                            TypeSex.valueOf(sex),
+                            TypeClassification.valueOf(classification),
+                            date,
+                            observations,
+                            TypeRefugeStatus.valueOf(shelterState),
+                            isAdoptionStatus,
+                            imageBitmap,
+                            isPublicationStatus
+                        )
+                        // Agregar la nueva mascota a la lista
+                        petList.add(newPet)
 
-                        val petList = mutableListOf<Pet>()
-                        for (i in 0 until jsonArray.length()) {
-                            val jsonObject = jsonArray.getJSONObject(i)
-                            val date_pet =
-                                stringToDate(jsonObject.getString("adoption_date"), dateFormat)
-                            val imageName = jsonObject.getString("image") + ".png"
-
-                            // Recupera el recurso de imagen desde el almacenamiento interno
-                            val petImagePath = File(filesDir, imageName)
-                            val imageBitmap = BitmapFactory.decodeFile(petImagePath.absolutePath)
-                            if (date_pet != null) {
-                                val pet = Pet(
-                                    id = jsonObject.getInt("id"),
-                                    species = TypeSpecies.valueOf(jsonObject.getString("species")),
-                                    name = jsonObject.getString("name"),
-                                    breed = jsonObject.getString("breed"),
-                                    sex = TypeSex.valueOf(jsonObject.getString("sex")),
-                                    classification = TypeClassification.valueOf(
-                                        jsonObject.getString(
-                                            "classification"
-                                        )
-                                    ),
-                                    adoption_date = date_pet,
-                                    observation = jsonObject.getString("observation"),
-                                    refuge_status = TypeRefugeStatus.valueOf(jsonObject.getString("refuge_status")),
-                                    adoption_status = jsonObject.getBoolean("adoption_status"),
-                                    image = imageBitmap,
-                                    publication_status = jsonObject.getBoolean("publication_status")
-                                )
-                                petList.add(pet)
-                            }
-
+                        // Convertir la lista de mascotas a JSON
+                        val newJsonArray = JSONArray()
+                        for (pet in petList) {
+                            val jsonObject = JSONObject()
+                            jsonObject.put("id", pet.id)
+                            jsonObject.put("species", pet.species.name)
+                            jsonObject.put("name", pet.name)
+                            jsonObject.put("breed", pet.breed)
+                            jsonObject.put("sex", pet.sex.name)
+                            jsonObject.put("classification", pet.classification.name)
+                            jsonObject.put(
+                                "adoption_date",
+                                dateToString(pet.adoption_date, dateFormat)
+                            )
+                            jsonObject.put("observation", pet.observation)
+                            jsonObject.put("refuge_status", pet.refuge_status.name)
+                            jsonObject.put("adoption_status", pet.adoption_status)
+                            jsonObject.put(
+                                "image", "image_" + pet.id
+                            )
+                            jsonObject.put("publication_status", pet.publication_status)
+                            newJsonArray.put(jsonObject)
                         }
 
-                        val nextId = petList.size + 1
+                        val file = File(filesDir, "pets.json")
+                        val newJsonString = newJsonArray.toString()
+                        file.writeText(newJsonString)
 
-                        val imageName = "image_" + nextId.toString()
-                        val imageBitToSave = imageBit
-                        if (imageBitToSave != null) {
-                            saveImageToInternalStorage(imageBitToSave, imageName)
-                            val newPet = Pet(
-                                nextId,
-                                TypeSpecies.valueOf(species),
-                                name,
-                                breed,
-                                TypeSex.valueOf(sex),
-                                TypeClassification.valueOf(classification),
-                                date,
-                                observations,
-                                TypeRefugeStatus.valueOf(shelterState),
-                                isAdoptionStatus,
-                                imageBitmap,
-                                isPublicationStatus
-                            )
-                            // Agregar la nueva mascota a la lista
-                            petList.add(newPet)
-
-                            // Convertir la lista de mascotas a JSON
-                            val newJsonArray = JSONArray()
-                            for (pet in petList) {
-                                val jsonObject = JSONObject()
-                                jsonObject.put("id", pet.id)
-                                jsonObject.put("species", pet.species.name)
-                                jsonObject.put("name", pet.name)
-                                jsonObject.put("breed", pet.breed)
-                                jsonObject.put("sex", pet.sex.name)
-                                jsonObject.put("classification", pet.classification.name)
-                                jsonObject.put(
-                                    "adoption_date",
-                                    dateToString(pet.adoption_date, dateFormat)
-                                )
-                                jsonObject.put("observation", pet.observation)
-                                jsonObject.put("refuge_status", pet.refuge_status.name)
-                                jsonObject.put("adoption_status", pet.adoption_status)
-                                jsonObject.put(
-                                    "image", "image_" + pet.id
-                                )
-                                jsonObject.put("publication_status", pet.publication_status)
-                                newJsonArray.put(jsonObject)
-                            }
-
-                            val file = File(filesDir, "pets.json")
-                            val newJsonString = newJsonArray.toString()
-                            file.writeText(newJsonString)
-
-                            Toast.makeText(
-                                this,
-                                "Mascota registrada exitosamente.",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
-
-                            val intent = Intent(this, ListPetsActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        } else {
-                            Toast.makeText(this, "La imagen es nula", Toast.LENGTH_SHORT).show()
-
-                        }
-
+                        Toast.makeText(
+                            this,
+                            "Mascota registrada exitosamente.",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                        val intent = Intent(this, ListPetsActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this, "La imagen es nula", Toast.LENGTH_SHORT).show()
 
                     }
-
                 } catch (e: IOException) {
                     println(e)
                 }
@@ -360,7 +313,6 @@ class RegisterPetActivity : AppCompatActivity() {
                             val imageBitmap =
                                 MediaStore.Images.Media.getBitmap(this.contentResolver, imageUri)
                             imgPet.setImageBitmap(imageBitmap)
-                            imageBit = imageBitmap
                         } catch (e: IOException) {
                             e.printStackTrace()
                         }
@@ -371,7 +323,6 @@ class RegisterPetActivity : AppCompatActivity() {
                     if (data != null && data.extras != null) {
                         val imageBitmap = data.extras!!.get("data") as Bitmap
                         imgPet.setImageBitmap(imageBitmap)
-                        imageBit = imageBitmap
                     }
                 }
             }
@@ -379,6 +330,7 @@ class RegisterPetActivity : AppCompatActivity() {
 
     }
 
+    // Guardar imagen en el almacenamiento interno
     private fun saveImageToInternalStorage(imageBitmap: Bitmap, imageName: String) {
         val imageFile = File(filesDir, imageName + ".png")
         val outputStream = FileOutputStream(imageFile)

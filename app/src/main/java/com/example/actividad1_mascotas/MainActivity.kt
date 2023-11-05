@@ -12,7 +12,6 @@ import org.json.JSONArray
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
     val drawableImageNames = mutableListOf<String>()
@@ -21,6 +20,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setTheme(android.R.style.Theme_NoTitleBar);
         setContentView(R.layout.activity_main)
+        // Esta funcionalidades permiten copiar la informacion del JSON y las imagenes al almacenamiento
+        // interno ya que eel contenido de los drwable no se pueden sobreescribir
         copyRawJsonToInternalStorage()
         copyDrawableImagesToInternalStorage()
 
@@ -28,8 +29,8 @@ class MainActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             val intent = Intent(this, ListPetsActivity::class.java)
             startActivity(intent)
-            finish()  // Esto cierra la actividad actual para que no puedas volver atrás a la pantalla de inicio
-        }, 3000) // 3000 milisegundos (3 segundos)
+            finish()
+        }, 3000)
 
     }
 
@@ -50,13 +51,15 @@ class MainActivity : AppCompatActivity() {
             outputStream.close()
             inputStream.close()
 
-            // Aquí puedes mostrar un mensaje de éxito o realizar otras acciones necesarias
-            Toast.makeText(this, "Archivo actualizado en el almacenamiento interno", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "Archivo actualizado en el almacenamiento interno",
+                Toast.LENGTH_SHORT
+            ).show()
             getDrawableImageNamesFromJson()
 
         } catch (e: IOException) {
             e.printStackTrace()
-            // Aquí puedes mostrar un mensaje de error en caso de que ocurra una excepción
             Toast.makeText(this, "Error al actualizar el archivo", Toast.LENGTH_SHORT).show()
         }
     }
@@ -76,10 +79,8 @@ class MainActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            // Manejar errores si es necesario
         }
 
-        // Ahora que tienes los nombres de las imágenes, copia las imágenes desde "res/drawable" al almacenamiento interno
         copyDrawableImagesToInternalStorage()
     }
 
@@ -102,11 +103,6 @@ class MainActivity : AppCompatActivity() {
             outputStream.close()
         } catch (e: IOException) {
             e.printStackTrace()
-            // Manejar errores si es necesario
         }
     }
-
-
-
-
 }

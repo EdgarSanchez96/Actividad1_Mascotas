@@ -1,29 +1,15 @@
 package com.example.actividad1_mascotas
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.actividad1_mascotas.models.Pet
-import com.example.actividad1_mascotas.models.TypeClassification
-import com.example.actividad1_mascotas.models.TypeRefugeStatus
-import com.example.actividad1_mascotas.models.TypeSex
-import com.example.actividad1_mascotas.models.TypeSpecies
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.json.JSONArray
-import java.io.File
-import java.io.IOException
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -59,7 +45,7 @@ class DetailsActivity : AppCompatActivity() {
             var id: Int = data.getInt("id") - 1
             val generalFunctions = GeneralFunctions(filesDir)
             val petList = generalFunctions.getListPets()
-            
+
             // Se recupera el registro que se presentara en detalle
             var petObtain: Pet = petList.get(id)
 
